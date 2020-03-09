@@ -11,7 +11,7 @@ import java.util.*;
 public class Main {
 
     public static void main(String args[]) {
-        String dictionary[] = {"i", "like", "sam", "sung", "samsung", "mobile", "ice", "cream", "man go"};
+        String dictionary[] = {"i", "like", "sam", "sung", "samsung", "mobile", "ice", "cream", "and", "man go", "mango"};
         String input = "ilikesamsungmobile";
 //        String input = "ilikeicecreamandmango";
 
@@ -72,18 +72,13 @@ public class Main {
         }
         List<Integer> wordIndexs = Arrays.asList(tmpIndexs);
 
-//        System.out.println("wordIndexs ="+ wordIndexs);
-
         int numOfSentence = 0;
         for(Map.Entry<Integer, List<String>> entry: wordMap.entrySet()) {
             int tmpSize = entry.getValue().size();
             if(tmpSize > numOfSentence) {
                 numOfSentence = tmpSize;
-                System.out.println("getvalue =" + entry.getValue());
             }
         }
-
-//        System.out.println("numOfSentence =" + numOfSentence);
 
         Set<String> outputSet = new HashSet<String>();
         String regex = "[a-zA-Z]";
@@ -104,6 +99,10 @@ public class Main {
                 }
 
                 if(!"".equals(word)) {
+                    if(index.intValue() > 1 && tmpInput.charAt(index.intValue()-1) != '0') {
+                        strBuffer = new StringBuffer();
+                        break;
+                    }
                     if(tmpInput.indexOf(word) == index.intValue()) {
                         String replaceStr = word.replaceAll(regex, "0");
                         tmpInput = tmpInput.replaceFirst(word, replaceStr);
@@ -111,7 +110,10 @@ public class Main {
                     }
                 }
             }
-            outputSet.add(strBuffer.toString());
+            String sentence = strBuffer.toString();
+            if(!"".equals(sentence)) {
+                outputSet.add(sentence);
+            }
         }
 
         int num = 1;
