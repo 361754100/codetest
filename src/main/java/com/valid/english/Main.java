@@ -12,7 +12,7 @@ public class Main {
 
     public static void main(String args[]) {
 
-        String dictionary[] = {"i", "like", "sam", "sung", "samsung", "mobile", "ice", "cream", "and", "man go", "mango"};
+        String dictionary[] = {"i", "like", "sam", "sung", "samsung", "mobile", "icecream", "and", "man go", "mango"};
 
         String input = "ilikesamsungmobile";
         System.out.println("input = "+ input + ", dictionary = "+ Arrays.asList(dictionary));
@@ -24,6 +24,10 @@ public class Main {
         analysisSentence(input, dictionary);
         System.out.println();
 
+        input = "ilikesamsungmobileicecreamandmango";
+        System.out.println("input = "+ input + ", dictionary = "+ Arrays.asList(dictionary));
+        analysisSentence(input, dictionary);
+        System.out.println();
     }
     
     public static void analysisSentence(String input, String dict[]) {
