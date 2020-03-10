@@ -11,32 +11,19 @@ import java.util.*;
 public class Main {
 
     public static void main(String args[]) {
+
         String dictionary[] = {"i", "like", "sam", "sung", "samsung", "mobile", "ice", "cream", "and", "man go", "mango"};
+
         String input = "ilikesamsungmobile";
-//        String input = "ilikeicecreamandmango";
+        System.out.println("input = "+ input + ", dictionary = "+ Arrays.asList(dictionary));
+        analysisSentence(input, dictionary);
+        System.out.println();
 
-        execute(input, dictionary);
-    }
+        input = "ilikeicecreamandmango";
+        System.out.println("input = "+ input + ", dictionary = "+ Arrays.asList(dictionary));
+        analysisSentence(input, dictionary);
+        System.out.println();
 
-    public static void execute(String input, String dictionary[]) {
-        String dict[] = analysisDict(dictionary);
-        analysisSentence(input, dict);
-    }
-
-    public static String[] analysisDict(String originDict[]) {
-        List<String> dict = new ArrayList<String>();
-        for(int i = 0; i < originDict.length; i++) {
-            if(originDict[i].indexOf(" ") == -1) {
-                dict.add(originDict[i]);
-            }else {
-                String tmpDict[] = originDict[i].split(" ");
-                for(String tmp:tmpDict) {
-                    dict.add(tmp);
-                }
-            }
-        }
-        String arr[] = new String[dict.size()];
-        return dict.toArray(arr);
     }
     
     public static void analysisSentence(String input, String dict[]) {
@@ -44,7 +31,7 @@ public class Main {
         Map<Integer, List<String>> wordMap = new HashMap<Integer, List<String>>();
 
         for(int i = 0; i < dict.length; i++) {
-            Integer index = input.indexOf(dict[i]);
+            Integer index = input.indexOf(dict[i].replaceAll(" ", ""));
             List<String> words = wordMap.get(index);
             if(words == null) {
                 words = new ArrayList<String>();
@@ -103,15 +90,16 @@ public class Main {
                         strBuffer = new StringBuffer();
                         break;
                     }
-                    if(tmpInput.indexOf(word) == index.intValue()) {
-                        String replaceStr = word.replaceAll(regex, "0");
-                        tmpInput = tmpInput.replaceFirst(word, replaceStr);
+                    String tmpWord = word.replaceAll(" ","");
+                    if(tmpInput.indexOf(tmpWord) == index.intValue()) {
+                        String replaceStr = tmpWord.replaceAll(regex, "0");
+                        tmpInput = tmpInput.replaceFirst(tmpWord, replaceStr);
                         strBuffer.append(word).append(" ");
                     }
                 }
             }
             String sentence = strBuffer.toString();
-            if(!"".equals(sentence)) {
+            if(!"".equals(sentence) && sentence.replaceAll(" ", "").equals(input)) {
                 outputSet.add(sentence);
             }
         }
