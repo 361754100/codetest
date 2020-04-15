@@ -2,6 +2,7 @@ package com.valid.english.factory;
 
 import org.reflections.Reflections;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -23,7 +24,12 @@ public class BeanFactory<T> {
         return instance;
     }
 
-    public void init(String basePackageName) {
+    public void loadBean(String basePackageName) {
+        doScan(basePackageName);
+        doDi();
+    }
+
+    public void doScan(String basePackageName) {
         if(basePackageName == null || "".equals(basePackageName)) {
             basePackageName = "com.valid.english";
         }
@@ -42,6 +48,30 @@ public class BeanFactory<T> {
             e.printStackTrace();
         }
 
+    }
+
+    public void doDi() {
+        Set<Map.Entry<String, Object>> beans = BEAN_CONTAINER.entrySet();
+
+        for(Map.Entry<String, Object> entry: beans) {
+            Object obj = entry.getValue();
+            Class<?> clazz = obj.getClass();
+            Field[] fields = clazz.getDeclaredFields();
+            for(Field field: fields) {
+                Object injectObj = null;
+                if(field.isAnnotationPresent(AutoWired.class)) {
+                    String name = field.getType().getName();
+                    injectObj = BEAN_CONTAINER.get(name);
+                }
+                // 通过反射注入到该属性中
+                field.setAccessible(true);
+                try {
+                    field.set(obj, injectObj);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     public T getBean(Class claz) {

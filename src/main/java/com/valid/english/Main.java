@@ -1,6 +1,7 @@
 package com.valid.english;
 
 import com.valid.english.factory.BeanFactory;
+import com.valid.english.service.HotelService;
 import com.valid.english.service.PersonService;
 
 /**
@@ -12,9 +13,13 @@ import com.valid.english.service.PersonService;
 public class Main {
 
     public static void main(String args[]) {
-        BeanFactory.getInstance().init("com.valid.english");
-        PersonService personService = (PersonService) BeanFactory.getInstance().getBean(PersonService.class);
-        personService.test();
+        BeanFactory.getInstance().loadBean("com.valid.english");
+
+//        PersonService personService = (PersonService) BeanFactory.getInstance().getBean(PersonService.class);
+//        personService.test();
+
+        HotelService hotelService = (HotelService) BeanFactory.getInstance().getBean(HotelService.class);
+        hotelService.order();
     }
 
 }
