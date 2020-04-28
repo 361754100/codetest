@@ -8,6 +8,9 @@ import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
 
+import java.util.HashSet;
+import java.util.Scanner;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -19,30 +22,43 @@ import java.util.concurrent.TimeUnit;
 public class Main {
 
     public static void main(String args[]) {
-        BeanFactory.getInstance().loadBean("com.valid.english");
+        Scanner scanner = new Scanner(System.in);
+        String input = null;
+        while(scanner.hasNext()) {
+            input = scanner.next();
+            break;
+        }
 
-//        PersonService personService = (PersonService) BeanFactory.getInstance().getBean(PersonService.class);
-//        personService.test();
+        System.out.println("input = " + input);
 
-        HotelService hotelService = (HotelService) BeanFactory.getInstance().getBean(HotelService.class);
-        hotelService.order();
-    }
+        char[] chars = input.toCharArray();
+        String priv = "";
+        String next = "";
+        StringBuffer piece = null;
+        Set<String> pieceSet = new HashSet<String>();
+        for(int i=0; i< chars.length; i++) {
+            piece = new StringBuffer();
+            priv = String.valueOf(chars[i]);
+            piece.append(priv);
+            for(int j=i+1; j < chars.length; j++) {
+                next = String.valueOf(chars[j]);
+                if(priv.equals(next)) {
+                    piece.append(next);
+                    if(j+1 == chars.length) {
+                        pieceSet.add(piece.toString());
+                        break;
+                    }
+                }else {
+                    pieceSet.add(piece.toString());
+                    i = j-1;
+                    break;
+                }
+            }
+        }
 
-    public static void testRLock() {
-        RedissonManager redissonManager = RedissonManager.getInstance();
-        Config config = new Config();
-        config.useSingleServer().setAddress("192.168.3.247:6037");
-        // 设置看门狗 30秒延长一次
-        config.setLockWatchdogTimeout(30000l);
+        for(String str: pieceSet) {
 
-        RedissonClient redisson = redissonManager.getRedisson(config);
-        RLock lock = redissonManager.getLock(redisson, "locktest");
-        try {
-            lock.tryLock(0, 30l, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } finally {
-            lock.unlock();
+            System.out.println("str = "+ str);
         }
     }
 
